@@ -1,0 +1,65 @@
+name:                covenanteyes-api
+
+-- The package version.  See the Haskell package versioning policy (PVP)
+-- for standards guiding when and how versions should be incremented.
+-- http://www.haskell.org/haskellwiki/Package_versioning_policy
+-- PVP summary:      +-+------- breaking API changes
+--                   | | +----- non-breaking API additions
+--                   | | | +--- code changes with no API change
+version:             0.1.0.0
+synopsis:            Interface for Covenant Eyes' Public REST API
+-- description:
+homepage:            http://developer.covenanteyes.com
+license:             MIT
+license-file:        LICENSE
+author:              Elliot Cameron
+maintainer:          elliot.cameron@covenanteyes.com
+copyright:           (c) Covenant Eyes 2015
+-- category:
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+
+library
+  exposed-modules:     CovenantEyes.Types,
+                       CovenantEyes.Endpoints,
+                       CovenantEyes.Api
+
+  -- Modules included in this library but not exported.
+  other-modules:       CovenantEyes.Internal.UrlEncoding,
+                       CovenantEyes.Internal.Http
+  -- other-extensions:
+
+  build-depends:       base >=4.7 && <4.9,
+                       aeson,
+                       aeson-lens,
+                       base-prelude,
+                       bytestring,
+                       case-insensitive,
+                       errors,
+                       exceptions,
+                       http-client,
+                       http-client-tls,
+                       http-types,
+                       lens,
+                       pipes,
+                       pipes-aeson,
+                       pipes-bytestring,
+                       pipes-http,
+                       pipes-parse,
+                       text,
+                       transformers
+
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+  default-extensions:  AutoDeriveTypeable,
+                       MultiWayIf,
+                       NoImplicitPrelude,
+                       OverloadedStrings,
+                       StandaloneDeriving
+
+  ghc-options:
+    -threaded -Wall -fwarn-tabs -funbox-strict-fields -O2
+    -fno-warn-orphans -fno-warn-unused-do-bind
+    -rtsopts -with-rtsopts=-N
