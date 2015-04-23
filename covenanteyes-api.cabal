@@ -23,6 +23,9 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     CovenantEyes.Types,
+                       CovenantEyes.Types.Config,
+                       CovenantEyes.Types.Endpoints,
+                       CovenantEyes.Types.Errors,
                        CovenantEyes.Endpoints,
                        CovenantEyes.Api
 

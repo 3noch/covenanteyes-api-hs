@@ -4,28 +4,21 @@ import           BasePrelude
 import           Data.ByteString                   (ByteString)
 import qualified Data.ByteString.Char8 as B
 import           Data.Text                         (Text)
-import           Data.Maybe                        (fromJust)
-import           Data.Monoid                       ((<>))
 import           Network.HTTP.Client               (Request, applyBasicAuth, parseUrl, setQueryString)
 
 import           CovenantEyes.Internal.UrlEncoding (urlEncode)
 import           CovenantEyes.Types
 
-defaultSecureApiRoot :: ApiRoot Secure
-defaultSecureApiRoot = "https://api.cvnt.net/v2"
 
-winClientCreds :: CredsFor CeClient
-winClientCreds = CredsFor (CeClient "CovenantEyesWindowsClient") (BasicAuthCreds "invalid" "invalid")
-
-userApiCredsRequest :: ApiRoot Secure -> CredsFor CeClient -> CeUser -> Text -> Request
-userApiCredsRequest apiRoot (CredsFor _ creds) user password
+userApiCredsRequest :: ApiRoot Secure -> ApiCredsFor CeClient -> CeUser -> Text -> Request
+userApiCredsRequest apiRoot (ApiCredsFor _ creds) user password
   = applyBasicAuthCreds creds
   $ setQueryString [("password", Just $ urlEncode password)]
   -- $ addHeader "User-Agent" someUserAgent
   $ fromJust $ parseUrlBs $ userRoot apiRoot user <> "/keys.json"
 
-userPanicRequest :: ApiRoot Secure -> CredsFor CeUser -> Request
-userPanicRequest apiRoot (CredsFor user creds)
+userPanicRequest :: ApiRoot Secure -> ApiCredsFor CeUser -> Request
+userPanicRequest apiRoot (ApiCredsFor user creds)
   = applyBasicAuthCreds creds $ fromJust $ parseUrlBs $ userRoot apiRoot user <> "/panic.json"
 
 
