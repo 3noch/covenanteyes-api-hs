@@ -1,4 +1,4 @@
-module CovenantEyes.Types.Endpoints
+module CovenantEyes.Api.Types.Endpoints
   ( BasicAuthCreds(..)
   , ApiCredsFor(..)
   , CeUser(..)
@@ -12,7 +12,6 @@ import           CovenantEyes.Api.Internal.Prelude
 
 import qualified Data.ByteString.Char8 as B
 import           Data.CaseInsensitive (CI)
-import           Data.Text (Text)
 
 data BasicAuthCreds = BasicAuthCreds
   { basicAuthUser     :: ByteString

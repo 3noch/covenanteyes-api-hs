@@ -1,14 +1,13 @@
-module CovenantEyes.Internal.UrlEncoding where
+module CovenantEyes.Api.Internal.UrlEncoding where
 
-import BasePrelude
-import Data.ByteString.Char8 (ByteString)
-import Data.CaseInsensitive (CI)
+import           CovenantEyes.Api.Internal.Prelude
+
+import           Data.CaseInsensitive (CI)
 import qualified Data.CaseInsensitive as CI
-import Data.Text (Text)
-import Data.Text.Encoding (encodeUtf8, decodeUtf8)
+import           Data.Text.Encoding (encodeUtf8, decodeUtf8)
 import qualified Network.HTTP.Types.URI as Uri
 
-import CovenantEyes.Types (CeUser(..))
+import           CovenantEyes.Api.Types (CeUser(..))
 
 
 class UrlEncodable a where

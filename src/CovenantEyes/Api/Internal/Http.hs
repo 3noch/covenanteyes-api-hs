@@ -1,20 +1,18 @@
-module CovenantEyes.Internal.Http where
+module CovenantEyes.Api.Internal.Http where
 
-import           BasePrelude hiding (try)
-import           Control.Error (EitherT, syncIO)
-import           Control.Monad.Catch (throwM)
+import           CovenantEyes.Api.Internal.Prelude
+
 import           Data.Aeson (FromJSON)
 import           Network.HTTP.Types.Header (hContentType)
 import qualified Pipes.Aeson as PJson
 import           Pipes.HTTP
 import           Pipes.Parse (evalStateT)
 
-import           CovenantEyes.Types
-import           CovenantEyes.Internal.Errors
+import           CovenantEyes.Api.Types
+import           CovenantEyes.Api.Internal.Errors
 
-downloadJson :: FromJSON a => Request -> EitherT SomeException IO a
-downloadJson req = syncIO $ do
-  manager <- newManager tlsManagerSettings
+downloadJson :: FromJSON a => Manager -> Request -> EitherT SomeException IO a
+downloadJson manager req = syncIO $ do
   withHTTP req manager $ \resp -> do
     let contentType = hContentType `lookup` responseHeaders resp
     unless (contentType == Just jsonContentType) $ throwM (UnexpectedContentType jsonContentType contentType)

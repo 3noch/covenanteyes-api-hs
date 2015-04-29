@@ -1,9 +1,9 @@
-module CovenantEyes.Types.Errors where
+module CovenantEyes.Api.Types.Errors where
 
-import           BasePrelude
-import           Control.Monad.Catch (Exception)
-import           Data.ByteString (ByteString)
+import           CovenantEyes.Api.Internal.Prelude
+
 import qualified Pipes.Aeson as PJson
+
 
 data CeApiException = NoData
                     | UnexpectedContent

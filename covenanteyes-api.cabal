@@ -22,16 +22,18 @@ cabal-version:       >=1.10
 
 
 library
-  exposed-modules:     CovenantEyes.Types,
-                       CovenantEyes.Types.Config,
-                       CovenantEyes.Types.Endpoints,
-                       CovenantEyes.Types.Errors,
-                       CovenantEyes.Endpoints,
-                       CovenantEyes.Api
+  exposed-modules:     CovenantEyes.Api,
+                       CovenantEyes.Api.Config,
+                       CovenantEyes.Api.Types,
+                       CovenantEyes.Api.Types.Endpoints,
+                       CovenantEyes.Api.Types.Errors
 
   -- Modules included in this library but not exported.
-  other-modules:       CovenantEyes.Internal.UrlEncoding,
-                       CovenantEyes.Internal.Http
+  other-modules:       CovenantEyes.Api.Internal.Endpoints,
+                       CovenantEyes.Api.Internal.Http,
+                       CovenantEyes.Api.Internal.Prelude,
+                       CovenantEyes.Api.Internal.UrlEncoding
+
   -- other-extensions:
 
   build-depends:       base >=4.7 && <4.9,
@@ -60,6 +62,7 @@ library
                        MultiWayIf,
                        NoImplicitPrelude,
                        OverloadedStrings,
+                       RecordWildCards,
                        StandaloneDeriving
 
   ghc-options:

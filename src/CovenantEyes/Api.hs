@@ -1,19 +1,19 @@
 module CovenantEyes.Api where
 
-import BasePrelude
-import Control.Error
+import CovenantEyes.Api.Internal.Prelude
+
 import Control.Lens        ((^.))
 import Data.Aeson.Lens     (key, asText)
-import Data.Text           (Text)
 import Data.Text.Encoding  (encodeUtf8)
 
-import CovenantEyes.Endpoints
-import CovenantEyes.Internal.Http (downloadJson)
-import CovenantEyes.Types
+import CovenantEyes.Api.Internal.Endpoints
+import CovenantEyes.Api.Internal.Http (downloadJson)
+import CovenantEyes.Api.Types
+import CovenantEyes.Api.Config
 
 getApiCredsForUser :: CeApiConfig -> CeUser -> Text -> EitherT SomeException IO (ApiCredsFor CeUser)
-getApiCredsForUser config user pw = do
-  json <- downloadJson $ userApiCredsRequest (_apiRootSecure config) (_clientApiCreds config) user pw
+getApiCredsForUser config@CeApiConfig{..} user pw = do
+  json <- downloadJson _httpManager (userApiCredsRequest config user pw)
   let apiCreds = do
         let root = Just json ^. key "result" . key "records" . key "basicAuthentication"
         apiKey    <- encodeUtf8 <$> root ^. key "key" . asText

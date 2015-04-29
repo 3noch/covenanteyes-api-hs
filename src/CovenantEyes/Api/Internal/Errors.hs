@@ -1,9 +1,6 @@
-module CovenantEyes.Internal.Errors where
+module CovenantEyes.Api.Internal.Errors where
 
-import BasePrelude
-import Control.Monad.Catch (MonadThrow, Exception, throwM)
-import Data.Either (either)
-import Data.Maybe  (fromMaybe, maybe)
+import CovenantEyes.Api.Internal.Prelude
 
 
 class Defaultable f where
