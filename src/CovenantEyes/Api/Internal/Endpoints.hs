@@ -6,7 +6,7 @@ import           Network.HTTP.Client               (Request(..), applyBasicAuth,
 
 import           CovenantEyes.Api.Internal.UrlEncoding (urlEncode)
 import           CovenantEyes.Api.Types
-import           CovenantEyes.Api.Config
+import           CovenantEyes.Api.Internal.Config
 
 
 type Url = ByteString
@@ -18,7 +18,7 @@ userApiCredsRequest config@CeApiConfig{..} user password
   $ clientApiRequest config $ userRoot _apiRootSecure user <> "/keys.json"
 
 apiRequest :: CeApiConfig -> Url -> Request
-apiRequest config url = applyUserAgent (configUserAgent config) $ fromJust $ parseUrl $ B.unpack url
+apiRequest config url = applyUserAgent (_userAgent config) $ fromJust $ parseUrl $ B.unpack url
 
 clientApiRequest :: CeApiConfig -> Url -> Request
 clientApiRequest config@CeApiConfig{..} url
