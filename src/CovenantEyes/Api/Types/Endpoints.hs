@@ -14,13 +14,13 @@ import qualified Data.ByteString.Char8 as B
 import           Data.CaseInsensitive (CI)
 
 data BasicAuthCreds = BasicAuthCreds
-  { basicAuthUser     :: ByteString
-  , basicAuthPassword :: ByteString
+  { basicAuthUser     :: !ByteString
+  , basicAuthPassword :: !ByteString
   } deriving (Show, Eq, Ord)
 
 data ApiCredsFor a = ApiCredsFor
-  { credId         :: a
-  , basicAuthCreds :: BasicAuthCreds }
+  { credId         :: !a
+  , basicAuthCreds :: !BasicAuthCreds }
 
 deriving instance Eq a   => Eq   (ApiCredsFor a)
 deriving instance Ord a  => Ord  (ApiCredsFor a)

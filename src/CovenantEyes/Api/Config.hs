@@ -6,13 +6,12 @@ module CovenantEyes.Api.Config
 
 import           CovenantEyes.Api.Internal.Prelude
 
-import           Data.Version (Version, showVersion)
+import           Data.Version (Version)
 import qualified Network.HTTP.Client as Http
 import qualified Network.HTTP.Client.TLS as Http
 
 import           CovenantEyes.Api.Types
 import           CovenantEyes.Api.Internal.Config
-
 
 defaultCeApiConfig :: ApiCredsFor CeClient -> Version -> EitherT SomeException IO CeApiConfig
 defaultCeApiConfig clientApiCreds clientVersion =

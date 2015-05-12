@@ -21,3 +21,22 @@ downloadJson manager req = syncIO $ do
       >>= throwingLeftAs DecodingError
   where
     jsonContentType = "application/json"
+
+
+data HttpMethod = GET | PUT | POST deriving (Show, Eq)
+
+applyBasicAuthCreds :: BasicAuthCreds -> Request -> Request
+applyBasicAuthCreds (BasicAuthCreds user pass) = applyBasicAuth user pass
+
+applyUserAgent :: ByteString -> Request -> Request
+applyUserAgent userAgent req
+  = req { requestHeaders = ("User-Agent", userAgent) : requestHeaders req }
+
+applyContentType :: ByteString -> Request -> Request
+applyContentType contentType req
+  = req { requestHeaders = ("Content-Type", contentType) : requestHeaders req }
+
+applyMethod :: HttpMethod -> Request -> Request
+applyMethod GET req  = req { method = "GET" }
+applyMethod PUT req  = req { method = "PUT" }
+applyMethod POST req = req { method = "POST" }

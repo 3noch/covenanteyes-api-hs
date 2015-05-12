@@ -2,19 +2,19 @@ module CovenantEyes.Api.Internal.Endpoints where
 
 import           CovenantEyes.Api.Internal.Prelude
 import qualified Data.ByteString.Char8 as B
-import           Network.HTTP.Client               (Request(..), applyBasicAuth, parseUrl, setQueryString)
+import           Network.HTTP.Client (Request, parseUrl, setQueryString)
 
+import           CovenantEyes.Api.Internal.Config
+import           CovenantEyes.Api.Internal.Http
 import           CovenantEyes.Api.Internal.UrlEncoding (urlEncode)
 import           CovenantEyes.Api.Types
-import           CovenantEyes.Api.Internal.Config
-
 
 type Url = ByteString
 
 
-userApiCredsRequest :: CeApiConfig -> CeUser -> Text -> Request
-userApiCredsRequest config@CeApiConfig{..} user password
-  = setQueryString [("password", Just $ urlEncode password)]
+userApiCredsRequest :: CeApiConfig -> CeUser -> Password -> Request
+userApiCredsRequest config@CeApiConfig{..} user (Password pw)
+  = setQueryString [("password", Just $ urlEncode pw)]
   $ clientApiRequest config $ userRoot _apiRootSecure user <> "/keys.json"
 
 apiRequest :: CeApiConfig -> Url -> Request
@@ -33,10 +33,3 @@ userPanicRequest config@CeApiConfig{..} apiCreds@(ApiCredsFor user _)
 
 userRoot :: ApiRoot Secure -> CeUser -> ByteString
 userRoot (ApiRoot apiRoot) (CeUser username) = apiRoot <> "/user/" <> urlEncode username
-
-applyBasicAuthCreds :: BasicAuthCreds -> Request -> Request
-applyBasicAuthCreds (BasicAuthCreds user pass) = applyBasicAuth user pass
-
-applyUserAgent :: ByteString -> Request -> Request
-applyUserAgent userAgent req
-  = req { requestHeaders = ("User-Agent", userAgent) : requestHeaders req }

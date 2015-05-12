@@ -5,7 +5,6 @@ module CovenantEyes.Api.Internal.Config
 import           CovenantEyes.Api.Internal.Prelude
 
 import qualified Data.ByteString.Char8 as B
-import qualified Data.Text as T
 import           Data.Text.Encoding (encodeUtf8)
 import           Data.Version (Version, showVersion)
 import qualified Network.HTTP.Client as Http
@@ -20,8 +19,8 @@ data CeApiConfig = CeApiConfig
   { _apiRootSecure    :: ApiRoot Secure
   , _apiRootNonSecure :: ApiRoot NonSecure
   , _clientApiCreds   :: ApiCredsFor CeClient
-  , _httpManager      :: Http.Manager
-  , _userAgent        :: ByteString }
+  , _httpManager      :: !Http.Manager
+  , _userAgent        :: !ByteString }
 
 mkCeApiConfig :: ApiCredsFor CeClient -> Version -> Http.Manager -> CeApiConfig
 mkCeApiConfig clientApiCreds clientVersion httpMgr = CeApiConfig
