@@ -18,7 +18,7 @@ userApiCredsRequest config@CeApiConfig{..} user (Password pw)
   $ clientApiRequest config $ userRoot _apiRootSecure user <> "/keys.json"
 
 apiRequest :: CeApiConfig -> Url -> Request
-apiRequest config url = applyUserAgent (_userAgent config) $ fromJust $ parseUrl $ B.unpack url
+apiRequest config url = setUserAgent (_userAgent config) $ fromJust $ parseUrl $ B.unpack url
 
 clientApiRequest :: CeApiConfig -> Url -> Request
 clientApiRequest config@CeApiConfig{..} url
