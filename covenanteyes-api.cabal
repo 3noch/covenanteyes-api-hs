@@ -39,7 +39,6 @@ library
 
   build-depends:       base >=4.7 && <4.9,
                        aeson,
-                       aeson-lens,
                        bytestring,
                        case-insensitive,
                        errors,
@@ -48,6 +47,7 @@ library
                        http-client-tls,
                        http-types,
                        lens,
+                       lens-aeson,
                        pipes,
                        pipes-aeson,
                        pipes-bytestring,
@@ -63,6 +63,7 @@ library
                        NoImplicitPrelude,
                        OverloadedStrings,
                        RecordWildCards,
+                       ScopedTypeVariables,
                        StandaloneDeriving
 
   ghc-options:
