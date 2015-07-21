@@ -12,10 +12,11 @@ import qualified Network.HTTP.Client.TLS as Http
 
 import           CovenantEyes.Api.Types
 import           CovenantEyes.Api.Internal.Config
+import           CovenantEyes.Api.Internal.Errors
 
-defaultCeApiConfig :: ApiCredsFor CeClient -> Version -> EitherT SomeException IO CeApiConfig
+defaultCeApiConfig :: ApiCredsFor CeClient -> Version -> IO CeApiConfig
 defaultCeApiConfig clientApiCreds clientVersion =
-  mkCeApiConfig clientApiCreds clientVersion <$> syncIO (Http.newManager Http.tlsManagerSettings)
+  mkCeApiConfig clientApiCreds clientVersion <$> Http.newManager Http.tlsManagerSettings
 
 configUserAgent :: CeApiConfig -> ByteString
 configUserAgent = _userAgent

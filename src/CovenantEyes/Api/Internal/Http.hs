@@ -12,8 +12,8 @@ import           Pipes.Parse (evalStateT)
 import           CovenantEyes.Api.Types
 import           CovenantEyes.Api.Internal.Errors
 
-downloadJson :: FromJSON a => Manager -> Request -> EitherT SomeException IO a
-downloadJson manager req = syncIO $ do
+downloadJson :: FromJSON a => Manager -> Request -> IO a
+downloadJson manager req = do
   withHTTP req manager $ \resp -> do
     let contentType = hContentType `lookup` responseHeaders resp
     unless (contentType == Just jsonContentType) $ throwM (UnexpectedContentType jsonContentType contentType)
@@ -21,7 +21,7 @@ downloadJson manager req = syncIO $ do
       >>= throwing NoData
       >>= throwingLeftAs DecodingError
 
-sendJson :: FromJSON a => Manager -> Json.Object -> Request -> EitherT SomeException IO a
+sendJson :: FromJSON a => Manager -> Json.Object -> Request -> IO a
 sendJson manager obj req = downloadJson manager (setJsonContent obj req)
 
 jsonContentType :: ByteString

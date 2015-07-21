@@ -1,17 +1,17 @@
 module CovenantEyes.Api.Types.Endpoints
   ( BasicAuthCreds(..)
   , ApiCredsFor(..)
-  , CeUser(..)
-  , CeClient(..)
   , ApiRoot(..), mkApiRoot
   , Secure
   , NonSecure
   ) where
 
 import           CovenantEyes.Api.Internal.Prelude
-
 import qualified Data.ByteString.Char8 as B
 import           Data.CaseInsensitive (CI)
+
+import           CovenantEyes.Api.Types.Entities
+
 
 data BasicAuthCreds = BasicAuthCreds
   { basicAuthUser     :: !ByteString
@@ -26,15 +26,6 @@ deriving instance Eq a   => Eq   (ApiCredsFor a)
 deriving instance Ord a  => Ord  (ApiCredsFor a)
 deriving instance Show a => Show (ApiCredsFor a)
 
-
-newtype CeUser   = CeUser   { getCeUsername   :: CI Text } deriving (Show, Eq, Ord)
-newtype CeClient = CeClient { getCeClientName :: Text    } deriving (Show, Eq, Ord)
-
-instance IsString CeUser where
-  fromString = CeUser . fromString . fromString
-
-instance IsString CeClient where
-  fromString = CeClient . fromString
 
 newtype ApiRoot a = ApiRoot { unApiRoot :: ByteString }
                     deriving (Show, Eq)

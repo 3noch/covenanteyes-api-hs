@@ -1,9 +1,7 @@
 module CovenantEyes.Api.Types
-  ( module CovenantEyes.Api.Types.Endpoints
-  , module CovenantEyes.Api.Types.Entities
-  , module CovenantEyes.Api.Types.Errors
+  ( module X
   ) where
 
-import CovenantEyes.Api.Types.Endpoints
-import CovenantEyes.Api.Types.Entities
-import CovenantEyes.Api.Types.Errors
+import CovenantEyes.Api.Types.Endpoints as X
+import CovenantEyes.Api.Types.Entities as X
+import CovenantEyes.Api.Types.Errors as X

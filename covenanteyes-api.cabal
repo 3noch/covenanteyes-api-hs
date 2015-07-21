@@ -26,6 +26,7 @@ library
                        CovenantEyes.Api.Config,
                        CovenantEyes.Api.Types,
                        CovenantEyes.Api.Types.Endpoints,
+                       CovenantEyes.Api.Types.Entities,
                        CovenantEyes.Api.Types.Errors
 
   -- Modules included in this library but not exported.
@@ -41,14 +42,14 @@ library
                        aeson,
                        bytestring,
                        case-insensitive,
-                       errors,
                        exceptions,
                        http-client,
                        http-client-tls,
                        http-types,
                        lens,
                        lens-aeson,
-                       pipes,
+                       mtl >=2.2.1 && <2.3,
+                       pipes == 4.1.*,
                        pipes-aeson,
                        pipes-bytestring,
                        pipes-http,

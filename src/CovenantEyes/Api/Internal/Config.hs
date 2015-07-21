@@ -13,6 +13,7 @@ import qualified System.Info as Sys
 import qualified Paths_covenanteyes_api as My (version)
 
 import           CovenantEyes.Api.Types.Endpoints
+import           CovenantEyes.Api.Types.Entities
 
 
 data CeApiConfig = CeApiConfig
