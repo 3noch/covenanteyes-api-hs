@@ -12,7 +12,6 @@ import qualified Network.HTTP.Client.TLS as Http
 
 import           CovenantEyes.Api.Types
 import           CovenantEyes.Api.Internal.Config
-import           CovenantEyes.Api.Internal.Errors
 
 defaultCeApiConfig :: ApiCredsFor CeClient -> Version -> IO CeApiConfig
 defaultCeApiConfig clientApiCreds clientVersion =

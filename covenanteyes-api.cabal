@@ -27,20 +27,25 @@ library
                        CovenantEyes.Api.Types,
                        CovenantEyes.Api.Types.Endpoints,
                        CovenantEyes.Api.Types.Entities,
-                       CovenantEyes.Api.Types.Errors
+                       CovenantEyes.Api.Types.Errors,
+                       CovenantEyes.Api.Internal.Time
 
   -- Modules included in this library but not exported.
   other-modules:       CovenantEyes.Api.Internal.Config,
                        CovenantEyes.Api.Internal.Endpoints,
+                       CovenantEyes.Api.Internal.Errors,
                        CovenantEyes.Api.Internal.Http,
                        CovenantEyes.Api.Internal.Prelude,
-                       CovenantEyes.Api.Internal.UrlEncoding
+                       CovenantEyes.Api.Internal.UrlEncoding,
+                       Paths_covenanteyes_api
 
   -- other-extensions:
 
-  build-depends:       base >=4.7 && <4.9,
+  build-depends:       base >=4.7 && <5,
                        aeson,
+                       base64-bytestring,
                        bytestring,
+                       clock,
                        case-insensitive,
                        exceptions,
                        http-client,
@@ -55,11 +60,14 @@ library
                        pipes-http,
                        pipes-parse,
                        text,
+                       time,
                        transformers
 
   hs-source-dirs:      src
   default-language:    Haskell2010
   default-extensions:  AutoDeriveTypeable,
+                       BangPatterns,
+                       GeneralizedNewtypeDeriving,
                        MultiWayIf,
                        NoImplicitPrelude,
                        OverloadedStrings,
@@ -71,3 +79,11 @@ library
     -threaded -Wall -fwarn-tabs -funbox-strict-fields -O2
     -fno-warn-orphans -fno-warn-unused-do-bind
     -rtsopts -with-rtsopts=-N
+
+test-suite unit-tests
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Spec.hs
+  ghc-options:      -Wall -threaded
+  build-depends:    base >=4.7 && <5, hspec, covenanteyes-api, clock, time
+  default-language: Haskell2010

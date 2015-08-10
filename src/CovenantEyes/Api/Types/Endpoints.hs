@@ -30,13 +30,12 @@ deriving instance Show a => Show (ApiCredsFor a)
 newtype ApiRoot a = ApiRoot { unApiRoot :: ByteString }
                     deriving (Show, Eq)
 
-instance IsString (ApiRoot a) where
-  fromString = mkApiRoot . fromString
+instance IsString (ApiRoot a) where fromString = mkApiRoot . fromString
 
 data Secure
 data NonSecure
 
 mkApiRoot :: ByteString -> ApiRoot a
 mkApiRoot root = ApiRoot $ if B.last root == '/'
-                  then B.init root
-                  else root
+                   then B.init root
+                   else root

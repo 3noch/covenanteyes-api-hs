@@ -2,7 +2,7 @@ module CovenantEyes.Api.Internal.Http where
 
 import           CovenantEyes.Api.Internal.Prelude
 
-import           Data.Aeson as Json (FromJSON, Object)
+import           Data.Aeson as Json (FromJSON, Object, Value)
 import           Network.HTTP.Types.Header as Http (hContentType, Header)
 import           Pipes (Producer)
 import qualified Pipes.Aeson as PJson
@@ -12,7 +12,7 @@ import           Pipes.Parse (evalStateT)
 import           CovenantEyes.Api.Types
 import           CovenantEyes.Api.Internal.Errors
 
-downloadJson :: FromJSON a => Manager -> Request -> IO a
+downloadJson :: Manager -> Request -> IO Json.Value
 downloadJson manager req = do
   withHTTP req manager $ \resp -> do
     let contentType = hContentType `lookup` responseHeaders resp
@@ -21,7 +21,7 @@ downloadJson manager req = do
       >>= throwing NoData
       >>= throwingLeftAs DecodingError
 
-sendJson :: FromJSON a => Manager -> Json.Object -> Request -> IO a
+sendJson :: Manager -> Json.Object -> Request -> IO Json.Value
 sendJson manager obj req = downloadJson manager (setJsonContent obj req)
 
 jsonContentType :: ByteString

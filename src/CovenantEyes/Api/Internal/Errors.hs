@@ -19,9 +19,6 @@ throwing e = throwingLeft . orLeft e
 orLeft :: l -> Maybe r -> Either l r
 orLeft l = maybe (Left l) Right
 
-leftAs :: (l -> r) -> Either l r -> r
-leftAs lToR = either lToR id
-
 throwingLeftAs :: (MonadThrow m, Exception e) => (l -> e) -> Either l r -> m r
 throwingLeftAs lToExcept (Left l)  = throwM $ lToExcept l
 throwingLeftAs _         (Right r) = return r
