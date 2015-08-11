@@ -8,9 +8,6 @@ module CovenantEyes.Api.Types.Endpoints
 
 import           CovenantEyes.Api.Internal.Prelude
 import qualified Data.ByteString.Char8 as B
-import           Data.CaseInsensitive (CI)
-
-import           CovenantEyes.Api.Types.Entities
 
 
 data BasicAuthCreds = BasicAuthCreds

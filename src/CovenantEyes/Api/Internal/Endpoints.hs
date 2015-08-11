@@ -1,11 +1,13 @@
 module CovenantEyes.Api.Internal.Endpoints
-  ( userApiCredsRequest
+  ( withJsonApi
+  , userApiCredsRequest
   , userPanicRequest
   , serverTimeRequest
   , urlRatingRequest
   ) where
 
 import           CovenantEyes.Api.Internal.Prelude
+import qualified Data.Aeson as Json (Value)
 import qualified Data.ByteString.Base64.URL as B64Url
 import qualified Data.ByteString.Char8 as B
 import           Network.HTTP.Client (Request, parseUrl, setQueryString)
@@ -17,6 +19,10 @@ import           CovenantEyes.Api.Types
 
 type Url = ByteString
 
+withJsonApi :: CeApiConfig -> Request -> (Json.Value -> Maybe a) -> IO a
+withJsonApi cfg request parse = do
+  json <- downloadJson (_httpManager cfg) request
+  parse json & throwing UnexpectedContent
 
 userApiCredsRequest :: CeApiConfig -> CeUser -> Password -> Request
 userApiCredsRequest cfg@CeApiConfig{..} user (Password pw)

@@ -33,7 +33,6 @@ library
   -- Modules included in this library but not exported.
   other-modules:       CovenantEyes.Api.Internal.Config,
                        CovenantEyes.Api.Internal.Endpoints,
-                       CovenantEyes.Api.Internal.Errors,
                        CovenantEyes.Api.Internal.Http,
                        CovenantEyes.Api.Internal.Prelude,
                        CovenantEyes.Api.Internal.UrlEncoding,

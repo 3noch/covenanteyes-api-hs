@@ -2,7 +2,7 @@ module CovenantEyes.Api.Internal.Http where
 
 import           CovenantEyes.Api.Internal.Prelude
 
-import           Data.Aeson as Json (FromJSON, Object, Value)
+import qualified Data.Aeson as Json (Object, Value)
 import           Network.HTTP.Types.Header as Http (hContentType, Header)
 import           Pipes (Producer)
 import qualified Pipes.Aeson as PJson
@@ -10,7 +10,7 @@ import           Pipes.HTTP
 import           Pipes.Parse (evalStateT)
 
 import           CovenantEyes.Api.Types
-import           CovenantEyes.Api.Internal.Errors
+
 
 downloadJson :: Manager -> Request -> IO Json.Value
 downloadJson manager req = do

@@ -7,9 +7,9 @@ import CovenantEyes.Api.Internal.Time
 import System.Clock as Clk
 
 
-newtype Password = Password { getPassword :: Text } deriving (Eq) -- IMPROVE: Use SecureMem?
+newtype Password = Password { getPassword     ::    Text } deriving (Eq) -- IMPROVE: Use SecureMem?
 newtype CeUser   = CeUser   { getCeUsername   :: CI Text } deriving (Show, Eq, Ord)
-newtype CeClient = CeClient { getCeClientName :: Text    } deriving (Show, Eq, Ord)
+newtype CeClient = CeClient { getCeClientName ::    Text } deriving (Show, Eq, Ord)
 
 
 data CeServerTimeSnapshot = CeServerTimeSnapshot { clientTick :: TimeSpec, serverTime :: UTCTime }
