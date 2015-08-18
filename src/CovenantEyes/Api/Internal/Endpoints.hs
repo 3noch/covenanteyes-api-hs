@@ -4,6 +4,7 @@ module CovenantEyes.Api.Internal.Endpoints
   , userPanicRequest
   , serverTimeRequest
   , urlRatingRequest
+  , userAllowBlockListRequest
   ) where
 
 import           CovenantEyes.Api.Internal.Prelude
@@ -22,38 +23,41 @@ type Url = ByteString
 withJsonApi :: CeApiConfig -> Request -> (Json.Value -> Maybe a) -> IO a
 withJsonApi cfg request parse = do
   json <- downloadJson (_httpManager cfg) request
-  parse json & throwing UnexpectedContent
+  parse json & throwing (UnexpectedContent json)
 
 userApiCredsRequest :: CeApiConfig -> CeUser -> Password -> Request
 userApiCredsRequest cfg@CeApiConfig{..} user (Password pw)
   = setQueryString [("password", Just $ urlEncode pw)]
-  $ clientApiRequest cfg $ userRoot _apiRootSecure user <> "/keys.json"
+  $ clientApiBaseRequest (userApiRoot cfg user <> "/keys.json") cfg
 
 userPanicRequest :: CeApiConfig -> ApiCredsFor CeUser -> Request
-userPanicRequest cfg@CeApiConfig{..} apiCreds@(ApiCredsFor user _)
-    = userApiRequest cfg apiCreds $ userRoot _apiRootSecure user <> "/panic.json"
+userPanicRequest = userApiRequest "/panic.json"
 
 serverTimeRequest :: CeApiConfig -> Request
-serverTimeRequest cfg = clientApiRequest cfg $ clientRoot (_apiRootSecure cfg) <> "/time.json"
+serverTimeRequest = clientApiRequest "/time.json"
 
 urlRatingRequest :: CeApiConfig -> Url -> Request
-urlRatingRequest cfg url
-  = clientApiRequest cfg $ urlRoot <> "/rating.json"
+urlRatingRequest cfg url = clientApiBaseRequest (urlRoot <> "/rating.json") cfg
   where urlRoot = unApiRoot (_apiRootSecure cfg) <> "/url/" <> B64Url.encode url
+
+userAllowBlockListRequest :: CeApiConfig -> ApiCredsFor CeUser -> Request
+userAllowBlockListRequest = userApiRequest "/filter/settings/urls.json"
 
 -- Helpers --
 apiRequest :: CeApiConfig -> Url -> Request
 apiRequest cfg url = setUserAgent (_userAgent cfg) $ fromJust $ parseUrl $ B.unpack url
 
-clientApiRequest :: CeApiConfig -> Url -> Request
-clientApiRequest cfg@CeApiConfig{..} url
-  = applyBasicAuthCreds (basicAuthCreds _clientApiCreds) $ apiRequest cfg url
+clientApiBaseRequest :: Url -> CeApiConfig -> Request
+clientApiBaseRequest absUrl cfg@CeApiConfig{..}
+  = applyBasicAuthCreds (basicAuthCreds _clientApiCreds) $ apiRequest cfg absUrl
 
-userApiRequest :: CeApiConfig -> ApiCredsFor CeUser -> Url -> Request
-userApiRequest cfg (ApiCredsFor _ creds) url = applyBasicAuthCreds creds $ apiRequest cfg url
+clientApiRequest :: Url -> CeApiConfig -> Request
+clientApiRequest relUrl cfg = clientApiBaseRequest absUrl cfg
+  where absUrl = unApiRoot (_apiRootSecure cfg) <> "/client" <> relUrl
 
-userRoot :: ApiRoot Secure -> CeUser -> ByteString
-userRoot (ApiRoot apiRoot) (CeUser username) = apiRoot <> "/user/" <> urlEncode username
+userApiRequest :: Url -> CeApiConfig -> ApiCredsFor CeUser -> Request
+userApiRequest relUrl cfg (ApiCredsFor user creds)
+  = applyBasicAuthCreds creds $ apiRequest cfg (userApiRoot cfg user <> relUrl)
 
-clientRoot :: ApiRoot Secure -> ByteString
-clientRoot (ApiRoot apiRoot) = apiRoot <> "/client"
+userApiRoot :: CeApiConfig -> CeUser -> Url
+userApiRoot cfg (CeUser username) = unApiRoot (_apiRootSecure cfg) <> "/user/" <> urlEncode username

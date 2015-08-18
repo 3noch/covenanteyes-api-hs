@@ -2,9 +2,9 @@ module CovenantEyes.Api where
 
 import CovenantEyes.Api.Internal.Prelude
 
-import Control.Lens        ((^?), to)
+import Control.Lens        ((^?), to, itoListOf)
 import qualified Data.Aeson as Json
-import Data.Aeson.Lens     (key, _Value, _String, _Bool)
+import Data.Aeson.Lens     (key, members, _Value, _String, _Bool)
 import Data.Text.Encoding  (encodeUtf8)
 
 import CovenantEyes.Api.Internal.Config
@@ -37,9 +37,9 @@ getServerTimeSnapshot cfg now = do
   return $ CeServerTimeSnapshot (before + halfDelta) utc
   where
     getUtcFrom json = do
-      timeStr <- throwing UnexpectedContent $
+      timeStr <- throwing (UnexpectedContent json) $
         json ^? key "result" . key "records" . key "time" . _Value
-      throwingLeftAs (const UnexpectedContent) $
+      throwingLeftAs (const $ UnexpectedContent json) $
         parseResultAsEither $ Json.fromJSON timeStr
 
     parseResultAsEither :: Json.FromJSON a => Json.Result a -> Either String a
@@ -59,3 +59,16 @@ getUrlRating cfg url = withJsonApi cfg (urlRatingRequest cfg url) $ \json-> do
                 ,("MATURE_TEEN",   MatureTeen)
                 ,("MATURE",        Mature)
                 ,("HIGHLY_MATURE", HighlyMature)]
+
+getUserAllowBlockList :: CeApiConfig -> ApiCredsFor CeUser -> IO [(Url, FilterRule)]
+getUserAllowBlockList cfg apiCreds = withJsonApi cfg (userAllowBlockListRequest cfg apiCreds) $ \json->
+  mapM convertEntry $ itoListOf (key "result" . key "records" . members) json
+  where
+    convertEntry :: (Text, Json.Value) -> Maybe (Url, FilterRule)
+    convertEntry (url, ruleVal) = do
+      strRule <- ruleVal ^? _String
+      rule    <- lookup strRule filterRuleMap
+      return (encodeUtf8 url, rule)
+
+    filterRuleMap = [("Allow", Allow)
+                    ,("Block", Block)]

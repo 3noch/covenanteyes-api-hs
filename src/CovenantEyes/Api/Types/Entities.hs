@@ -25,3 +25,6 @@ calculateServerTime CeServerTimeSnapshot{..} tick
 
 data MaturityRating = Everyone | Youth | Teen | MatureTeen | Mature | HighlyMature
                     deriving (Show, Eq, Ord, Enum, Bounded)
+
+data FilterRule = Allow | Block
+                deriving (Show, Eq, Ord, Enum, Bounded)
