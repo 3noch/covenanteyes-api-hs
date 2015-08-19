@@ -2,9 +2,9 @@ module CovenantEyes.Api where
 
 import CovenantEyes.Api.Internal.Prelude
 
-import Control.Lens        ((^?), to, itoListOf)
+import Control.Lens        ((^?), (^..), to)
 import qualified Data.Aeson as Json
-import Data.Aeson.Lens     (key, members, _Value, _String, _Bool)
+import Data.Aeson.Lens     (key, values, _Value, _String, _Bool)
 import Data.Text.Encoding  (encodeUtf8)
 
 import CovenantEyes.Api.Internal.Config
@@ -12,6 +12,7 @@ import CovenantEyes.Api.Internal.Endpoints
 import CovenantEyes.Api.Internal.Http (downloadJson)
 import CovenantEyes.Api.Internal.Time
 import CovenantEyes.Api.Types
+
 
 getApiCredsForUser :: CeApiConfig -> CeUser -> Password -> IO (ApiCredsFor CeUser)
 getApiCredsForUser cfg user pw = withJsonApi cfg (userApiCredsRequest cfg user pw) $ \json-> do
@@ -61,14 +62,12 @@ getUrlRating cfg url = withJsonApi cfg (urlRatingRequest cfg url) $ \json-> do
                 ,("HIGHLY_MATURE", HighlyMature)]
 
 getUserAllowBlockList :: CeApiConfig -> ApiCredsFor CeUser -> IO [(Url, FilterRule)]
-getUserAllowBlockList cfg apiCreds = withJsonApi cfg (userAllowBlockListRequest cfg apiCreds) $ \json->
-  mapM convertEntry $ itoListOf (key "result" . key "records" . members) json
+getUserAllowBlockList cfg apiCreds = withJsonApi cfg (userAllowBlockListRequest cfg apiCreds) $ \json-> do
+  entries <- json ^? (key "result" . key "records" . _Value)
+  forM (entries ^.. values) $ \entry-> do
+    url    <- entry ^? key "url" . _String . to encodeUtf8
+    action <- join $ entry ^? key "action" . _String . to (`lookup` filterRuleMap)
+    return (url, action)
   where
-    convertEntry :: (Text, Json.Value) -> Maybe (Url, FilterRule)
-    convertEntry (url, ruleVal) = do
-      strRule <- ruleVal ^? _String
-      rule    <- lookup strRule filterRuleMap
-      return (encodeUtf8 url, rule)
-
-    filterRuleMap = [("Allow", Allow)
-                    ,("Block", Block)]
+    filterRuleMap = [("ALLOW", Allow)
+                    ,("BLOCK", Block)]
