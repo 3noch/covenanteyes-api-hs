@@ -28,3 +28,7 @@ data MaturityRating = Everyone | Youth | Teen | MatureTeen | Mature | HighlyMatu
 
 data FilterRule = Allow | Block
                 deriving (Show, Eq, Ord, Enum, Bounded)
+
+data FilterSensitivity = SenstivityEveryone | SenstivityYouth | SenstivityTeen | SenstivityMatureTeen | SenstivityMature
+                       | SenstivityRestricted
+                       deriving (Show, Eq, Ord, Enum, Bounded)

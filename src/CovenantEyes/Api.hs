@@ -50,20 +50,20 @@ getServerTimeSnapshot cfg now = do
 type Url = ByteString
 
 getUrlRating :: CeApiConfig -> Url -> IO MaturityRating
-getUrlRating cfg url = withJsonApi cfg (urlRatingRequest cfg url) $ \json-> do
-    strRating <- json ^? key "result" . key "records" . key "maturity_rating" . _String
-    lookup strRating ratingMap
+getUrlRating cfg url = withJsonApi cfg (urlRatingRequest cfg url) $ \json->
+  join $ json ^? key "result" . key "records" . key "maturity_rating" . _String . to (`lookup` ratingMap)
   where
-    ratingMap = [("EVERYONE",      Everyone)
-                ,("YOUTH",         Youth)
-                ,("TEEN",          Teen)
-                ,("MATURE_TEEN",   MatureTeen)
-                ,("MATURE",        Mature)
-                ,("HIGHLY_MATURE", HighlyMature)]
+    ratingMap =
+      [("EVERYONE",      Everyone)
+      ,("YOUTH",         Youth)
+      ,("TEEN",          Teen)
+      ,("MATURE_TEEN",   MatureTeen)
+      ,("MATURE",        Mature)
+      ,("HIGHLY_MATURE", HighlyMature)]
 
 getUserAllowBlockList :: CeApiConfig -> ApiCredsFor CeUser -> IO [(Url, FilterRule)]
 getUserAllowBlockList cfg apiCreds = withJsonApi cfg (userAllowBlockListRequest cfg apiCreds) $ \json-> do
-  entries <- json ^? (key "result" . key "records" . _Value)
+  entries <- json ^? key "result" . key "records" . _Value
   forM (entries ^.. values) $ \entry-> do
     url    <- entry ^? key "url" . _String . to encodeUtf8
     action <- join $ entry ^? key "action" . _String . to (`lookup` filterRuleMap)
@@ -71,3 +71,16 @@ getUserAllowBlockList cfg apiCreds = withJsonApi cfg (userAllowBlockListRequest 
   where
     filterRuleMap = [("ALLOW", Allow)
                     ,("BLOCK", Block)]
+
+
+getUserFilterSensitivity :: CeApiConfig -> ApiCredsFor CeUser -> IO FilterSensitivity
+getUserFilterSensitivity cfg apiCreds = withJsonApi cfg (userFilterSensitivityRequest cfg apiCreds) $ \json->
+  join $ json ^? key "result" . key "records" . key "sensitivity_level" . _String . to (`lookup` filterSensitivityMap)
+  where
+    filterSensitivityMap =
+      [("EVERYONE",    SenstivityEveryone)
+      ,("YOUTH",       SenstivityYouth)
+      ,("TEEN",        SenstivityTeen)
+      ,("MATURE_TEEN", SenstivityMatureTeen)
+      ,("MATURE",      SenstivityMature)
+      ,("RESTRICTED",  SenstivityRestricted)]

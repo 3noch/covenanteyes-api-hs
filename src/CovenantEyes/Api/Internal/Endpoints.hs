@@ -1,10 +1,11 @@
 module CovenantEyes.Api.Internal.Endpoints
-  ( withJsonApi
-  , userApiCredsRequest
-  , userPanicRequest
-  , serverTimeRequest
-  , urlRatingRequest
-  , userAllowBlockListRequest
+  (withJsonApi
+  ,userApiCredsRequest
+  ,userPanicRequest
+  ,serverTimeRequest
+  ,urlRatingRequest
+  ,userAllowBlockListRequest
+  ,userFilterSensitivityRequest
   ) where
 
 import           CovenantEyes.Api.Internal.Prelude
@@ -42,6 +43,9 @@ urlRatingRequest cfg url = clientApiBaseRequest (urlRoot <> "/rating.json") cfg
 
 userAllowBlockListRequest :: CeApiConfig -> ApiCredsFor CeUser -> Request
 userAllowBlockListRequest = userApiRequest "/filter/settings/urls.json"
+
+userFilterSensitivityRequest :: CeApiConfig -> ApiCredsFor CeUser -> Request
+userFilterSensitivityRequest = userApiRequest "/filter/settings/sensitivity_level.json"
 
 -- Helpers --
 apiRequest :: CeApiConfig -> Url -> Request
