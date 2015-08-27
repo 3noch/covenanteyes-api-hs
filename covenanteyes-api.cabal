@@ -75,7 +75,7 @@ library
                        StandaloneDeriving
 
   ghc-options:
-    -threaded -Wall -fwarn-tabs -funbox-strict-fields -O2
+    -threaded -Wall -fwarn-tabs -funbox-strict-fields -O1
     -fno-warn-orphans -fno-warn-unused-do-bind
     -rtsopts -with-rtsopts=-N
 
@@ -83,6 +83,6 @@ test-suite unit-tests
   type:             exitcode-stdio-1.0
   hs-source-dirs:   test
   main-is:          Spec.hs
-  ghc-options:      -Wall -threaded
+  ghc-options:      -Wall -O1 -threaded -rtsopts -with-rtsopts=-N
   build-depends:    base >=4.7 && <5, hspec, covenanteyes-api, clock, time
   default-language: Haskell2010

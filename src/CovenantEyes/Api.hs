@@ -78,9 +78,9 @@ getUserFilterSensitivity cfg apiCreds = withJsonApi cfg (userFilterSensitivityRe
   join $ json ^? key "result" . key "records" . key "sensitivity_level" . _String . to (`lookup` filterSensitivityMap)
   where
     filterSensitivityMap =
-      [("EVERYONE",    SenstivityEveryone)
-      ,("YOUTH",       SenstivityYouth)
-      ,("TEEN",        SenstivityTeen)
-      ,("MATURE_TEEN", SenstivityMatureTeen)
-      ,("MATURE",      SenstivityMature)
-      ,("RESTRICTED",  SenstivityRestricted)]
+      [("EVERYONE",    SensitivityEveryone)
+      ,("YOUTH",       SensitivityYouth)
+      ,("TEEN",        SensitivityTeen)
+      ,("MATURE_TEEN", SensitivityMatureTeen)
+      ,("MATURE",      SensitivityMature)
+      ,("RESTRICTED",  SensitivityRestricted)]

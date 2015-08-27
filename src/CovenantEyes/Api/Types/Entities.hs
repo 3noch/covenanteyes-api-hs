@@ -29,6 +29,15 @@ data MaturityRating = Everyone | Youth | Teen | MatureTeen | Mature | HighlyMatu
 data FilterRule = Allow | Block
                 deriving (Show, Eq, Ord, Enum, Bounded)
 
-data FilterSensitivity = SenstivityEveryone | SenstivityYouth | SenstivityTeen | SenstivityMatureTeen | SenstivityMature
-                       | SenstivityRestricted
+data FilterSensitivity = SensitivityEveryone | SensitivityYouth | SensitivityTeen | SensitivityMatureTeen
+                       | SensitivityMature | SensitivityRestricted
                        deriving (Show, Eq, Ord, Enum, Bounded)
+
+maturityRatingIsSensitive :: FilterSensitivity -> MaturityRating -> Bool
+maturityRatingIsSensitive sensitivity = case sensitivity of
+  SensitivityEveryone   -> (> Everyone)
+  SensitivityYouth      -> (> Youth)
+  SensitivityTeen       -> (> Teen)
+  SensitivityMatureTeen -> (> MatureTeen)
+  SensitivityMature     -> (> Mature)
+  SensitivityRestricted -> (const True)
